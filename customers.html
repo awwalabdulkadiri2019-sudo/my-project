@@ -1,0 +1,718 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customers - Admin Panel</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #1e293b;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button, input, select {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        /* Sidebar */
+        aside {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #17243b;
+            color: white;
+            padding: 25px 16px;
+            overflow-y: auto;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 0 12px 35px;
+        }
+
+        .brand span {
+            color: #818cf8;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #94a3b8;
+            letter-spacing: 1.5px;
+            padding: 0 12px;
+            margin-bottom: 12px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .links a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 12px;
+            border-radius: 8px;
+            color: #cbd5e1;
+            transition: 0.3s;
+        }
+
+        .links a:hover,
+        .links a.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        /* Main layout */
+        main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        header {
+            background: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .account {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e7ff;
+            color: #4338ca;
+            display: grid;
+            place-items: center;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .primary-btn {
+            background: #4f46e5;
+            color: white;
+            padding: 12px 18px;
+            font-weight: 600;
+        }
+
+        .primary-btn:hover {
+            background: #4338ca;
+        }
+
+        /* Summary cards */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+        }
+
+        .summary-card p {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .summary-card h2 {
+            font-size: 27px;
+        }
+
+        .summary-card small {
+            display: block;
+            margin-top: 8px;
+            color: #64748b;
+        }
+
+        /* Customers table */
+        .panel {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .panel-heading {
+            padding: 22px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .panel-heading h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar input,
+        .toolbar select {
+            padding: 11px 13px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            outline: none;
+            background: white;
+            color: #1e293b;
+        }
+
+        .toolbar input {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .toolbar input:focus,
+        .toolbar select:focus {
+            border-color: #4f46e5;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 17px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .customer-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #e0e7ff;
+            color: #4338ca;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .customer-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .customer-email {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .active-status {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .inactive-status {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 7px;
+        }
+
+        .edit-btn {
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 7px 10px;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 7px 10px;
+        }
+
+        .empty-row {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+        }
+
+        /* Add/Edit modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            background: rgba(15, 23, 42, 0.55);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 460px;
+            padding: 25px;
+            border-radius: 14px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .modal-header h2 {
+            font-size: 21px;
+        }
+
+        .close-btn {
+            background: #f1f5f9;
+            padding: 7px 11px;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #4f46e5;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .cancel-btn {
+            padding: 12px 16px;
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        @media (max-width: 1100px) {
+            .summary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 700px) {
+            aside {
+                width: 72px;
+                padding: 20px 8px;
+            }
+
+            .brand {
+                font-size: 0;
+                text-align: center;
+                padding: 0 0 30px;
+            }
+
+            .brand span {
+                font-size: 22px;
+            }
+
+            .menu-title,
+            .link-text {
+                display: none;
+            }
+
+            .links a {
+                justify-content: center;
+                padding: 14px 5px;
+                font-size: 20px;
+            }
+
+            main {
+                margin-left: 72px;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            .account {
+                font-size: 12px;
+                gap: 7px;
+            }
+
+            .content {
+                padding: 18px 12px;
+            }
+
+            .page-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .page-heading h1 {
+                font-size: 23px;
+            }
+
+            .summary {
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-card h2 {
+                font-size: 22px;
+            }
+
+            .panel-heading {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside>
+        <div class="brand">Admin<span>Panel</span></div>
+
+        <p class="menu-title">Main Menu</p>
+
+        <nav class="links">
+            <a href="index.html">
+                <span>▦</span>
+                <span class="link-text">Dashboard</span>
+            </a>
+
+            <a href="orders.html">
+                <span>🛍</span>
+                <span class="link-text">Orders</span>
+            </a>
+
+            <a href="customers.html" class="active">
+                <span>♙</span>
+                <span class="link-text">Customers</span>
+            </a>
+
+            <a href="inventory.html">
+                <span>▣</span>
+                <span class="link-text">Inventory</span>
+            </a>
+
+            <a href="sales.html">
+                <span>▤</span>
+                <span class="link-text">Sales</span>
+            </a>
+
+            <a href="payments.html">
+                <span>₦</span>
+                <span class="link-text">Payments</span>
+            </a>
+
+            <a href="settings.html">
+                <span>⚙</span>
+                <span class="link-text">Settings</span>
+            </a>
+
+            <a href="report.html">
+                <span>▥</span>
+                <span class="link-text">Reports</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main>
+        <header>
+            <strong>Customer Management</strong>
+
+            <div class="account">
+                <div class="avatar">S</div>
+                <span>Solomon Sonnex</span>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <section class="page-heading">
+                <div>
+                    <h1>Customers</h1>
+                    <p>Manage your customer information and accounts.</p>
+                </div>
+
+                <button class="primary-btn" type="button">
+                    + Add New Customer
+                </button>
+            </section>
+
+            <section class="summary">
+                <div class="summary-card">
+                    <p>Total Customers</p>
+                    <h2>4</h2>
+                    <small>All registered customers</small>
+                </div>
+
+                <div class="summary-card">
+                    <p>Active Customers</p>
+                    <h2>3</h2>
+                    <small>Currently active</small>
+                </div>
+
+                <div class="summary-card">
+                    <p>Inactive Customers</p>
+                    <h2>1</h2>
+                    <small>Currently inactive</small>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-heading">
+                    <h2>All Customers</h2>
+
+                    <div class="toolbar">
+                        <input
+                            type="search"
+                            placeholder="Search name, email or phone..."
+                            aria-label="Search customers"
+                        >
+
+                        <select aria-label="Filter customers">
+                            <option>All statuses</option>
+                            <option>Active</option>
+                            <option>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Phone</th>
+                                <th>Date Joined</th>
+                                <th>Orders</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="customer-info">
+                                        <div class="customer-avatar">J</div>
+                                        <div>
+                                            <div class="customer-name">John Doe</div>
+                                            <div class="customer-email">john@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>08012345678</td>
+                                <td>10 Oct 2026</td>
+                                <td>12</td>
+                                <td><span class="status active-status">Active</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="edit-btn" type="button">Edit</button>
+                                        <button class="delete-btn" type="button">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="customer-info">
+                                        <div class="customer-avatar">M</div>
+                                        <div>
+                                            <div class="customer-name">Mary James</div>
+                                            <div class="customer-email">mary@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>08023456789</td>
+                                <td>12 Oct 2026</td>
+                                <td>8</td>
+                                <td><span class="status active-status">Active</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="edit-btn" type="button">Edit</button>
+                                        <button class="delete-btn" type="button">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="customer-info">
+                                        <div class="customer-avatar">D</div>
+                                        <div>
+                                            <div class="customer-name">David Smith</div>
+                                            <div class="customer-email">david@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>08034567890</td>
+                                <td>14 Oct 2026</td>
+                                <td>5</td>
+                                <td><span class="status inactive-status">Inactive</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="edit-btn" type="button">Edit</button>
+                                        <button class="delete-btn" type="button">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="customer-info">
+                                        <div class="customer-avatar">S</div>
+                                        <div>
+                                            <div class="customer-name">Sarah Adams</div>
+                                            <div class="customer-email">sarah@example.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>08045678901</td>
+                                <td>16 Oct 2026</td>
+                                <td>3</td>
+                                <td><span class="status active-status">Active</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="edit-btn" type="button">Edit</button>
+                                        <button class="delete-btn" type="button">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Admin Panel</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #1e293b;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font: inherit;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Sidebar */
+        aside {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100vh;
+            background: #17243b;
+            color: white;
+            padding: 25px 16px;
+            overflow-y: auto;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+            padding: 0 12px 35px;
+        }
+
+        .brand span {
+            color: #818cf8;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            color: #94a3b8;
+            letter-spacing: 1.5px;
+            padding: 0 12px;
+            margin-bottom: 12px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .links a {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 12px;
+            border-radius: 8px;
+            color: #cbd5e1;
+            transition: 0.2s;
+        }
+
+        .links a:hover,
+        .links a.active {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .links a span:first-child {
+            width: 22px;
+            text-align: center;
+        }
+
+        /* Main layout */
+        main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        header {
+            background: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .account {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e7ff;
+            color: #4338ca;
+            display: grid;
+            place-items: center;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        /* Page heading */
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .page-heading p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .date-label {
+            color: #64748b;
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        /* Summary cards */
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 22px;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.03);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .card-title {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .purple {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .blue {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .green {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .orange {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .summary-card h2 {
+            font-size: 25px;
+            margin-bottom: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .card-note {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .positive {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        .warning {
+            color: #d97706;
+            font-weight: 600;
+        }
+
+        /* Dashboard grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+            gap: 22px;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .panel-heading {
+            padding: 22px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-heading h2 {
+            font-size: 17px;
+        }
+
+        .panel-heading p {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .period {
+            padding: 8px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 7px;
+            background: white;
+            color: #475569;
+            font-size: 12px;
+        }
+
+        /* CSS-only revenue chart */
+        .chart-area {
+            padding: 25px 20px 18px;
+        }
+
+        .chart-summary {
+            margin-bottom: 25px;
+        }
+
+        .chart-summary h3 {
+            font-size: 27px;
+            margin-bottom: 5px;
+        }
+
+        .chart-summary p {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .chart {
+            height: 220px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: 12px;
+            padding: 15px 5px 0;
+            border-bottom: 1px solid #e2e8f0;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0,
+                transparent 48px,
+                #edf0f5 49px,
+                transparent 50px
+            );
+        }
+
+        .bar-group {
+            height: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+        }
+
+        .bar {
+            width: min(35px, 85%);
+            background: #818cf8;
+            border-radius: 6px 6px 0 0;
+            transition: background 0.2s;
+        }
+
+        .bar:hover {
+            background: #4f46e5;
+        }
+
+        .bar-label {
+            font-size: 11px;
+            color: #64748b;
+            padding-bottom: 9px;
+        }
+
+        /* Order status */
+        .status-content {
+            padding: 22px;
+        }
+
+        .status-item {
+            margin-bottom: 25px;
+        }
+
+        .status-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .status-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .status-top span:last-child {
+            font-weight: 600;
+        }
+
+        .progress {
+            height: 8px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .paid-fill {
+            width: 70%;
+            background: #10b981;
+        }
+
+        .pending-fill {
+            width: 20%;
+            background: #f59e0b;
+        }
+
+        .cancelled-fill {
+            width: 10%;
+            background: #ef4444;
+        }
+
+        .status-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .paid-dot {
+            background: #10b981;
+        }
+
+        .pending-dot {
+            background: #f59e0b;
+        }
+
+        .cancelled-dot {
+            background: #ef4444;
+        }
+
+        /* Recent orders */
+        .recent-orders {
+            margin-bottom: 25px;
+        }
+
+        .view-all {
+            color: #4f46e5;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th,
+        td {
+            padding: 17px 20px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .order-id {
+            color: #4338ca;
+            font-weight: 600;
+        }
+
+        .customer-name {
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .completed {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .cancelled {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .amount {
+            font-weight: 600;
+        }
+
+        /* Quick links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .quick-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 18px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            transition: 0.2s;
+            min-width: 0;
+        }
+
+        .quick-link:hover {
+            border-color: #818cf8;
+            transform: translateY(-2px);
+        }
+
+        .quick-icon {
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            background: #eef2ff;
+            color: #4338ca;
+            border-radius: 9px;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+
+        .quick-link strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .quick-link small {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        footer {
+            padding: 10px 0 0;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1200px) {
+            .summary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .quick-links {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .dashboard-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            aside {
+                width: 72px;
+                padding: 20px 8px;
+            }
+
+            .brand {
+                font-size: 0;
+                text-align: center;
+                padding: 0 0 30px;
+            }
+
+            .brand span {
+                font-size: 22px;
+            }
+
+            .menu-title,
+            .link-text {
+                display: none;
+            }
+
+            .links a {
+                justify-content: center;
+                padding: 14px 5px;
+                font-size: 20px;
+            }
+
+            main {
+                margin-left: 72px;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            header > strong {
+                font-size: 13px;
+            }
+
+            .account {
+                font-size: 11px;
+                gap: 7px;
+            }
+
+            .avatar {
+                width: 34px;
+                height: 34px;
+            }
+
+            .content {
+                padding: 18px 12px;
+            }
+
+            .page-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .page-heading h1 {
+                font-size: 23px;
+            }
+
+            .summary {
+                gap: 10px;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-card h2 {
+                font-size: 20px;
+            }
+
+            .card-top {
+                align-items: flex-start;
+            }
+
+            .card-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 17px;
+            }
+
+            .panel-heading {
+                padding: 16px;
+            }
+
+            .chart-area {
+                padding: 20px 12px 15px;
+            }
+
+            .chart {
+                gap: 5px;
+                height: 190px;
+            }
+
+            .bar-label {
+                font-size: 10px;
+            }
+
+            .status-content {
+                padding: 18px;
+            }
+
+            th,
+            td {
+                padding: 14px;
+            }
+
+            .quick-links {
+                gap: 10px;
+            }
+
+            .quick-link {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .quick-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+
+            .quick-link strong {
+                font-size: 12px;
+            }
+
+            .quick-link small {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+
+            .account span {
+                max-width: 85px;
+                overflow-wrap: anywhere;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside>
+        <div class="brand">Admin<span>Panel</span></div>
+
+        <p class="menu-title">MAIN MENU</p>
+
+        <nav class="links">
+            <a href="index.html" class="active">
+                <span>▦</span>
+                <span class="link-text">Dashboard</span>
+            </a>
+
+            <a href="orders.html">
+                <span>🛍</span>
+                <span class="link-text">Orders</span>
+            </a>
+
+            <a href="customers.html">
+                <span>♙</span>
+                <span class="link-text">Customers</span>
+            </a>
+
+            <a href="inventory.html">
+                <span>▣</span>
+                <span class="link-text">Inventory</span>
+            </a>
+
+            <a href="sales.html">
+                <span>▤</span>
+                <span class="link-text">Sales</span>
+            </a>
+
+            <a href="payments.html">
+                <span>₦</span>
+                <span class="link-text">Payments</span>
+            </a>
+
+            <a href="reports.html">
+                <span>▥</span>
+                <span class="link-text">Reports</span>
+            </a>
+
+            <a href="settings.html">
+                <span>⚙</span>
+                <span class="link-text">Settings</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main>
+
+        <header>
+            <strong>Admin Dashboard</strong>
+
+            <div class="account">
+                <div class="avatar">S</div>
+                <span>Solomon Sonnex</span>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- Page heading -->
+            <section class="page-heading">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back! Here's what's happening with your store.</p>
+                </div>
+
+                <div class="date-label">October 2026</div>
+            </section>
+
+            <!-- Summary cards -->
+            <section class="summary">
+
+                <div class="summary-card">
+                    <div class="card-top">
+                        <p class="card-title">Total Revenue</p>
+                        <div class="card-icon purple">₦</div>
+                    </div>
+
+                    <h2>₦2,450,000</h2>
+                    <p class="card-note">
+                        <span class="positive">↑ 12.5%</span> compared with last month
+                    </p>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-top">
+                        <p class="card-title">Total Orders</p>
+                        <div class="card-icon blue">🛍</div>
+                    </div>
+
+                    <h2>1,248</h2>
+                    <p class="card-note">
+                        <span class="positive">↑ 8.2%</span> compared with last month
+                    </p>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-top">
+                        <p class="card-title">Total Customers</p>
+                        <div class="card-icon green">♙</div>
+                    </div>
+
+                    <h2>856</h2>
+                    <p class="card-note">
+                        <span class="positive">↑ 5.4%</span> compared with last month
+                    </p>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-top">
+                        <p class="card-title">Pending Orders</p>
+                        <div class="card-icon orange">◷</div>
+                    </div>
+
+                    <h2>24</h2>
+                    <p class="card-note">
+                        <span class="warning">Needs attention</span>
+                    </p>
+                </div>
+
+            </section>
+
+            <!-- Revenue chart and order status -->
+            <section class="dashboard-grid">
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Revenue Overview</h2>
+                            <p>Monthly revenue performance</p>
+                        </div>
+
+                        <span class="period">Last 7 months</span>
+                    </div>
+
+                    <div class="chart-area">
+                        <div class="chart-summary">
+                            <h3>₦2.45M</h3>
+                            <p>Total revenue for the current period</p>
+                        </div>
+
+                        <div class="chart">
+                            <div class="bar-group">
+                                <div class="bar" style="height: 35%;"></div>
+                                <span class="bar-label">Apr</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 48%;"></div>
+                                <span class="bar-label">May</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 42%;"></div>
+                                <span class="bar-label">Jun</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 65%;"></div>
+                                <span class="bar-label">Jul</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 57%;"></div>
+                                <span class="bar-label">Aug</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 78%;"></div>
+                                <span class="bar-label">Sep</span>
+                            </div>
+
+                            <div class="bar-group">
+                                <div class="bar" style="height: 95%;"></div>
+                                <span class="bar-label">Oct</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h2>Order Status</h2>
+                            <p>Overview of order progress</p>
+                        </div>
+                    </div>
+
+                    <div class="status-content">
+
+                        <div class="status-item">
+                            <div class="status-top">
+                                <span>Completed</span>
+                                <span>874</span>
+                            </div>
+
+                            <div class="progress">
+                                <div class="progress-fill paid-fill"></div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-top">
+                                <span>Pending</span>
+                                <span>249</span>
+                            </div>
+
+                            <div class="progress">
+                                <div class="progress-fill pending-fill"></div>
+                            </div>
+                        </div>
+
+                        <div class="status-item">
+                            <div class="status-top">
+                                <span>Cancelled</span>
+                                <span>125</span>
+                            </div>
+
+                            <div class="progress">
+                                <div class="progress-fill cancelled-fill"></div>
+                            </div>
+                        </div>
+
+                        <div class="status-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot paid-dot"></span>
+                                Completed
+                            </div>
+
+                            <div class="legend-item">
+                                <span class="legend-dot pending-dot"></span>
+                                Pending
+                            </div>
+
+                            <div class="legend-item">
+                                <span class="legend-dot cancelled-dot"></span>
+                                Cancelled
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Recent orders -->
+            <section class="panel recent-orders">
+
+                <div class="panel-heading">
+                    <div>
+                        <h2>Recent Orders</h2>
+                        <p>Latest transactions from your store</p>
+                    </div>
+
+                    <a href="order.html" class="view-all">View All →</a>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td class="order-id">ORD-1001</td>
+                                <td class="customer-name">John Doe</td>
+                                <td>20 Oct 2026</td>
+                                <td class="amount">₦125,000</td>
+                                <td><span class="status-badge completed">Completed</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="order-id">ORD-1002</td>
+                                <td class="customer-name">Mary James</td>
+                                <td>20 Oct 2026</td>
+                                <td class="amount">₦82,500</td>
+                                <td><span class="status-badge pending">Pending</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="order-id">ORD-1003</td>
+                                <td class="customer-name">David Smith</td>
+                                <td>19 Oct 2026</td>
+                                <td class="amount">₦48,000</td>
+                                <td><span class="status-badge completed">Completed</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="order-id">ORD-1004</td>
+                                <td class="customer-name">Sarah Adams</td>
+                                <td>19 Oct 2026</td>
+                                <td class="amount">₦215,000</td>
+                                <td><span class="status-badge cancelled">Cancelled</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="order-id">ORD-1005</td>
+                                <td class="customer-name">Michael Brown</td>
+                                <td>18 Oct 2026</td>
+                                <td class="amount">₦67,500</td>
+                                <td><span class="status-badge completed">Completed</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="order-id">ORD-1006</td>
+                                <td class="customer-name">Grace Wilson</td>
+                                <td>18 Oct 2026</td>
+                                <td class="amount">₦94,000</td>
+                                <td><span class="status-badge pending">Pending</span></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- Quick links -->
+            <section>
+                <div class="panel-heading" style="padding: 0 0 18px; border: none;">
+                    <div>
+                        <h2>Quick Actions</h2>
+                        <p>Quickly access other sections of your admin panel</p>
+                    </div>
+                </div>
+
+                <div class="quick-links">
+
+                    <a href="orders.html" class="quick-link">
+                        <div class="quick-icon">🛍</div>
+                        <div>
+                            <strong>Orders</strong>
+                            <small>Manage orders</small>
+                        </div>
+                    </a>
+
+                    <a href="customers.html" class="quick-link">
+                        <div class="quick-icon">♙</div>
+                        <div>
+                            <strong>Customers</strong>
+                            <small>View customers</small>
+                        </div>
+                    </a>
+
+                    <a href="inventory.html" class="quick-link">
+                        <div class="quick-icon">▣</div>
+                        <div>
+                            <strong>Inventory</strong>
+                            <small>Manage products</small>
+                        </div>
+                    </a>
+
+                    <a href="reports.html" class="quick-link">
+                        <div class="quick-icon">▥</div>
+                        <div>
+                            <strong>Reports</strong>
+                            <small>View reports</small>
+                        </div>
+                    </a>
+
+                </div>
+            </section>
+
+            <footer>
+                © 2026 AdminPanel. All rights reserved.
+            </footer>
+
+        </div>
+    </main>
+
+</body>
+</html>
