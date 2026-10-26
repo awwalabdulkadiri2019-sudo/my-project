@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdminPro | Management System</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #f4f6fb;
+            color: #17243b;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Navigation */
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #172554;
+        }
+
+        .logo span {
+            color: #4f46e5;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            color: #475569;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #4f46e5;
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 11px 20px;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .btn-outline {
+            border: 1px solid #d1d5db;
+            color: #172554;
+            background: #ffffff;
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: #ffffff;
+            border: 1px solid #4f46e5;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1200px;
+            margin: auto;
+            padding: 80px 30px 70px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .hero-label {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #4338ca;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            line-height: 1.15;
+            margin-bottom: 22px;
+            color: #172554;
+        }
+
+        .hero h1 span {
+            color: #4f46e5;
+        }
+
+        .hero p {
+            color: #64748b;
+            font-size: 16px;
+            max-width: 530px;
+            margin-bottom: 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .hero-buttons .btn {
+            padding: 14px 23px;
+        }
+
+        .hero-note {
+            margin-top: 22px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Dashboard Preview */
+        .preview {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(23, 37, 84, 0.10);
+            border: 1px solid #e5e7eb;
+        }
+
+        .preview-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            gap: 10px;
+        }
+
+        .preview-top h3 {
+            font-size: 17px;
+        }
+
+        .preview-top span {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .preview-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .mini-card {
+            background: #f8fafc;
+            padding: 17px;
+            border: 1px solid #edf0f5;
+            border-radius: 10px;
+        }
+
+        .mini-card p {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .mini-card h3 {
+            font-size: 22px;
+            color: #172554;
+        }
+
+        .mini-card small {
+            color: #16a34a;
+            font-size: 11px;
+        }
+
+        .chart-box {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 10px;
+            border: 1px solid #edf0f5;
+        }
+
+        .chart-heading {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .chart {
+            height: 130px;
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            gap: 12px;
+            border-bottom: 1px solid #dbe2ea;
+            padding: 0 8px;
+        }
+
+        .bar {
+            width: 10%;
+            max-width: 35px;
+            background: #6366f1;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .bar:nth-child(even) {
+            background: #a5b4fc;
+        }
+
+        .chart-labels {
+            display: flex;
+            justify-content: space-around;
+            color: #64748b;
+            font-size: 10px;
+            margin-top: 8px;
+        }
+
+        /* Features */
+        .features {
+            background: #ffffff;
+            padding: 75px 30px;
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 650px;
+            margin: 0 auto 45px;
+        }
+
+        .section-heading h2 {
+            font-size: 32px;
+            color: #172554;
+            margin-bottom: 12px;
+        }
+
+        .section-heading p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .feature-grid {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 22px;
+        }
+
+        .feature-card {
+            padding: 28px 23px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #ffffff;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(23, 37, 84, 0.08);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e0e7ff;
+            border-radius: 10px;
+            font-size: 23px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 17px;
+            margin-bottom: 10px;
+            color: #172554;
+        }
+
+        .feature-card p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        /* Call to Action */
+        .cta {
+            max-width: 1140px;
+            margin: 70px auto;
+            padding: 55px 30px;
+            background: #172554;
+            border-radius: 16px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .cta h2 {
+            font-size: 30px;
+            margin-bottom: 14px;
+        }
+
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 25px;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .cta .btn {
+            background: #ffffff;
+            color: #172554;
+        }
+
+        .cta .btn:hover {
+            background: #e0e7ff;
+        }
+
+        /* Footer */
+        footer {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 25px 30px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-content p {
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .footer-links a:hover {
+            color: #4f46e5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                padding-top: 60px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .cta {
+                margin: 50px 20px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .navbar {
+                padding: 18px 20px;
+            }
+
+            .logo {
+                font-size: 21px;
+            }
+
+            .nav-buttons {
+                gap: 7px;
+            }
+
+            .nav-buttons .btn {
+                padding: 9px 11px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 50px 20px;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .hero p {
+                font-size: 14px;
+            }
+
+            .preview {
+                padding: 16px;
+            }
+
+            .mini-card h3 {
+                font-size: 18px;
+            }
+
+            .features {
+                padding: 55px 20px;
+            }
+
+            .section-heading h2 {
+                font-size: 27px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta {
+                padding: 40px 22px;
+            }
+
+            .cta h2 {
+                font-size: 25px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">Admin<span>Pro</span></a>
+
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+            </div>
+
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="registration.html" class="btn btn-primary">
+                    Get Started
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <span class="hero-label">BUSINESS MANAGEMENT MADE SIMPLE</span>
+
+            <h1>
+                Manage Your Business
+                <span>Smarter.</span>
+            </h1>
+
+            <p>
+                Keep your business organized with one simple management
+                system. Monitor sales, manage orders, track inventory,
+                view payments and understand your business performance
+                from one dashboard.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="registration.html" class="btn btn-primary">
+                    Create an Account →
+                </a>
+
+                <a href="login.html" class="btn btn-outline">
+                    Sign In
+                </a>
+            </div>
+
+            <div class="hero-note">
+                A simple place to manage your daily business activities.
+            </div>
+        </div>
+
+        <!-- Dashboard Preview -->
+        <div class="preview">
+            <div class="preview-top">
+                <h3>Business Overview</h3>
+                <span>● Overview</span>
+            </div>
+
+            <div class="preview-cards">
+                <div class="mini-card">
+                    <p>Total Revenue</p>
+                    <h3>₦2.45M</h3>
+                    <small>Revenue overview</small>
+                </div>
+
+                <div class="mini-card">
+                    <p>Total Orders</p>
+                    <h3>1,248</h3>
+                    <small>Orders overview</small>
+                </div>
+
+                <div class="mini-card">
+                    <p>Customers</p>
+                    <h3>856</h3>
+                    <small>Customer overview</small>
+                </div>
+
+                <div class="mini-card">
+                    <p>Pending Orders</p>
+                    <h3>24</h3>
+                    <small>Orders to review</small>
+                </div>
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-heading">
+                    <span>Revenue Overview</span>
+                    <span>This Year</span>
+                </div>
+
+                <div class="chart">
+                    <div class="bar" style="height: 35%;"></div>
+                    <div class="bar" style="height: 50%;"></div>
+                    <div class="bar" style="height: 42%;"></div>
+                    <div class="bar" style="height: 68%;"></div>
+                    <div class="bar" style="height: 55%;"></div>
+                    <div class="bar" style="height: 82%;"></div>
+                    <div class="bar" style="height: 70%;"></div>
+                </div>
+
+                <div class="chart-labels">
+                    <span>Jan</span>
+                    <span>Feb</span>
+                    <span>Mar</span>
+                    <span>Apr</span>
+                    <span>May</span>
+                    <span>Jun</span>
+                    <span>Jul</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-heading">
+            <h2>Everything You Need in One Place</h2>
+            <p>
+                Access the main tools you need to organize and monitor
+                your business activities without unnecessary complexity.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Dashboard</h3>
+                <p>
+                    View important business figures, revenue summaries
+                    and recent activities from one central page.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Order Management</h3>
+                <p>
+                    Keep track of customer orders and review their
+                    current status in one organized place.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Customer Records</h3>
+                <p>
+                    Organize customer information and make customer
+                    records easier to access.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🗃️</div>
+                <h3>Inventory</h3>
+                <p>
+                    Organize your products and keep an eye on stock
+                    quantities and inventory records.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Sales Tracking</h3>
+                <p>
+                    Review sales information and understand how your
+                    business is performing.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3>Payments</h3>
+                <p>
+                    Keep payment records organized and review
+                    payment statuses.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Reports</h3>
+                <p>
+                    Bring business information together to make
+                    reviewing performance easier.
+                </p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚙️</div>
+                <h3>Settings</h3>
+                <p>
+                    Keep your account preferences and management
+                    options organized.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="cta" id="about">
+        <h2>Ready to Get Organized?</h2>
+
+        <p>
+            Start with a simple account and explore a central place
+            for managing your business information.
+        </p>
+
+        <a href="registration.html" class="btn">
+            Get Started Today →
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>© 2026 AdminPro. All rights reserved.</p>
+
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="login.html">Login</a>
+                <a href="registration.html">Register</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
